@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ASPNetCore.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace ASPNetCore
 {
@@ -30,6 +33,11 @@ namespace ASPNetCore
         {
             services.AddOptions();
             services.Configure<MyOptions>(Configuration);
+            services.AddDbContext<ConfigurationContext>(
+                options => options.UseSqlServer(
+                    string.Format(
+                        Configuration.GetConnectionString("DefaultConnection"), 
+                        Environment.GetEnvironmentVariable("dbpass"))));
             // Add framework services.
             services.AddMvc();
         }
